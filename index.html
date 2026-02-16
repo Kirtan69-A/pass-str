@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Strength Checker | Secure Audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  
+  <!-- Animated gradient background -->
+  <div class="bg-gradient" aria-hidden="true"></div>
+  <!-- Floating particle layer -->
+  <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+
+  <!-- Floating particle layer -->
+<canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+
+<!-- School Logo -->
+<img src="sukunna school image.png" alt="Sukuna Secondary School Logo" class="school-logo" id="schoolLogo" />
+
+<!-- Theme toggle -->
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+  <!-- existing theme toggle content -->
+</button>
+
+  <!-- Theme toggle -->
+  <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+    <span class="theme-icon theme-icon-dark" aria-hidden="true">🌙</span>
+    <span class="theme-icon theme-icon-light" aria-hidden="true">☀️</span>
+  </button>
+
+  <!-- Glassmorphism card -->
+  <main class="card">
+    <header class="card-header">
+      <h1 class="card-title">Password Strength Checker</h1>
+      <p class="card-subtitle">Real-time security audit · Client-side only</p>
+    </header>
+
+    <!-- Password input row: input + visibility + copy -->
+    <div class="input-row">
+      <div class="input-wrap">
+        <input
+          type="password"
+          id="passwordInput"
+          class="input-field"
+          placeholder="Enter password to analyze..."
+          autocomplete="off"
+          aria-label="Password"
+        />
+        <button type="button" class="btn-icon btn-visibility" id="toggleBtn" aria-label="Show password" title="Show password">
+          <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+          <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
+          </svg>
+        </button>
+        <button type="button" class="btn-icon btn-copy" id="copyBtn" aria-label="Copy password" title="Copy to clipboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="copy-feedback" id="copyFeedback">Copied!</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="btn-actions">
+      <button type="button" class="btn btn-generate" id="generateBtn">
+        <span class="btn-glow"></span>
+        Generate Strong Password
+      </button>
+    </div>
+
+    <!-- Strength: score + bar + label -->
+    <section class="strength-block" aria-live="polite">
+      <div class="strength-top">
+        <span class="strength-label">Strength</span>
+        <span class="strength-score" id="scoreDisplay">—</span>
+      </div>
+      <div class="strength-bar-wrap">
+        <div class="strength-bar-fill" id="strengthBar"></div>
+      </div>
+      <p class="strength-category" id="strengthLabel">—</p>
+    </section>
+
+    <!-- Entropy + Time to crack -->
+    <section class="stats-row">
+      <div class="stat">
+        <span class="stat-label">Entropy</span>
+        <span class="stat-value" id="entropyValue">—</span>
+        <span class="stat-unit">bits</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Time to crack*</span>
+        <span class="stat-value stat-time" id="timeToCrack">—</span>
+      </div>
+    </section>
+    <p class="stat-note">* Approximate, at 10 billion guesses/sec</p>
+
+    <!-- Checklist: 6 requirements -->
+    <section class="checklist" aria-label="Password requirements">
+      <h3 class="checklist-title">Requirements</h3>
+      <ul class="checklist-list">
+        <li class="checklist-item" id="checkLength">
+          <span class="check-icon" aria-hidden="true"></span>
+          <span>12+ characters</span>
+        </li>
+        <li class="checklist-item" id="checkUpper">
+          <span class="check-icon" aria-hidden="true"></span>
+          <span>Uppercase letters</span>
+        </li>
+        <li class="checklist-item" id="checkLower">
+          <span class="check-icon" aria-hidden="true"></span>
+          <span>Lowercase letters</span>
+        </li>
+        <li class="checklist-item" id="checkNumber">
+          <span class="check-icon" aria-hidden="true"></span>
+          <span>Numbers</span>
+        </li>
+        <li class="checklist-item" id="checkSpecial">
+          <span class="check-icon" aria-hidden="true"></span>
+          <span>Special symbols</span>
+        </li>
+        <li class="checklist-item" id="checkPatterns">
+          <span class="check-icon" aria-hidden="true"></span>
+          <span>No common patterns</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Security badges -->
+    <section class="badges" aria-label="Security guarantees">
+      <div class="badge">
+        <span class="badge-icon" aria-hidden="true">🖥️</span>
+        <span>100% Client-side</span>
+      </div>
+      <div class="badge">
+        <span class="badge-icon" aria-hidden="true">🔒</span>
+        <span>No password stored</span>
+      </div>
+      <div class="badge">
+        <span class="badge-icon" aria-hidden="true">🛡️</span>
+        <span>Privacy safe</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
